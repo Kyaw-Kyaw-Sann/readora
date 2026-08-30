@@ -13,6 +13,7 @@ const publicRoutes = new Set([
   '/forgot-password',
   '/verify-reset-otp',
   '/reset-password',
+  '/verify-email',
 ]);
 
 export function SessionGuard() {

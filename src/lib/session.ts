@@ -1,7 +1,8 @@
 import { refreshAccessToken } from '@/api/client';
 import { getCurrentUser, getUserInterests } from '@/api/users.api';
-import { clearTokens, getStoredRefreshToken } from '@/lib/token-storage';
+import { clearTokens, getStoredRefreshToken, saveTokens } from '@/lib/token-storage';
 import { useAuthStore, type SessionRoute } from '@/stores/auth-store';
+import type { AuthTokens, AuthUser } from '@/types/auth.types';
 
 let restorePromise: Promise<SessionRoute> | null = null;
 
@@ -20,6 +21,11 @@ export async function clearSession() {
   useAuthStore.getState().setUnauthenticated();
 }
 
+export async function startAuthenticatedSession(tokens: AuthTokens, user: AuthUser) {
+  await saveTokens(tokens);
+  return resolveUserRoute(user);
+}
+
 async function restoreSessionState(): Promise<SessionRoute> {
   const authStore = useAuthStore.getState();
   authStore.setRestoring();
@@ -34,17 +40,23 @@ async function restoreSessionState(): Promise<SessionRoute> {
     await refreshAccessToken();
     const user = await getCurrentUser();
 
-    if (!user.emailVerified) {
-      authStore.setAuthenticated(user, 'verify-email');
-      return 'verify-email';
-    }
-
-    const interests = await getUserInterests();
-    const route: SessionRoute = interests.length === 0 ? 'interests' : 'home';
-    authStore.setAuthenticated(user, route);
-    return route;
+    return resolveUserRoute(user);
   } catch {
     await clearSession();
     return 'welcome';
   }
+}
+
+async function resolveUserRoute(user: AuthUser): Promise<SessionRoute> {
+  const authStore = useAuthStore.getState();
+
+  if (!user.emailVerified) {
+    authStore.setAuthenticated(user, 'verify-email');
+    return 'verify-email';
+  }
+
+  const interests = await getUserInterests();
+  const route: SessionRoute = interests.length === 0 ? 'interests' : 'home';
+  authStore.setAuthenticated(user, route);
+  return route;
 }
