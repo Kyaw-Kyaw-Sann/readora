@@ -46,7 +46,9 @@ apiClient.interceptors.response.use(
     const originalRequest = (error as { config?: RetriableRequestConfig }).config;
     const status = (error as { response?: { status?: number } }).response?.status;
 
-    if (status !== 401 || !originalRequest || originalRequest._retry) {
+    const isAuthRequest = originalRequest?.url?.startsWith('/api/auth/');
+
+    if (status !== 401 || !originalRequest || originalRequest._retry || isAuthRequest) {
       return Promise.reject(normalizeApiError(error));
     }
 
