@@ -65,7 +65,7 @@ apiClient.interceptors.response.use(
   },
 );
 
-async function refreshAccessToken() {
+export async function refreshAccessToken() {
   if (!refreshPromise) {
     refreshPromise = requestTokenRefresh().finally(() => {
       refreshPromise = null;
