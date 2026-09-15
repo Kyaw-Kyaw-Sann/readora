@@ -1,18 +1,20 @@
 import { Tabs } from 'expo-router';
 import { useColorScheme } from 'nativewind';
-import { Text } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AppIcon, type AppIconName } from '@/components/ui/app-icon';
 import { colors } from '@/constants/theme';
 
-const tabIcons = {
-  home: '⌂',
-  library: '▤',
-  profile: '♙',
-  search: '⌕',
+const tabIcons: Record<string, AppIconName> = {
+  home: 'home',
+  library: 'library',
+  profile: 'profile',
+  search: 'search',
 } as const;
 
 export default function TabsLayout() {
   const { colorScheme } = useColorScheme();
+  const insets = useSafeAreaInsets();
   const dark = colorScheme === 'dark';
 
   return (
@@ -25,10 +27,13 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: dark ? colors.surfaceDark : colors.surface,
           borderTopColor: dark ? colors.borderDark : colors.border,
-          height: 64,
-          paddingTop: 6,
+          height: 62 + insets.bottom,
+          paddingBottom: Math.max(insets.bottom, 8),
+          paddingTop: 7,
         },
-        tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>{tabIcons[route.name as keyof typeof tabIcons]}</Text>,
+        tabBarIcon: ({ color, focused }) => (
+          <AppIcon color={color} name={tabIcons[route.name]} size={23} strokeWidth={focused ? 2.4 : 1.8} />
+        ),
       })}>
       <Tabs.Screen name="home" options={{ title: 'Home' }} />
       <Tabs.Screen name="search" options={{ title: 'Search' }} />
