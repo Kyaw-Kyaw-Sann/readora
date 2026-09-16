@@ -1,16 +1,17 @@
 import type { ColorValue } from 'react-native';
 import Svg, { Circle, Line, Path, Rect } from 'react-native-svg';
 
-export type AppIconName = 'headphones' | 'home' | 'library' | 'moon' | 'profile' | 'search' | 'sun';
+export type AppIconName = 'arrow-left' | 'headphones' | 'heart' | 'home' | 'library' | 'moon' | 'profile' | 'search' | 'share' | 'sun';
 
 interface AppIconProps {
   color?: ColorValue;
+  filled?: boolean;
   name: AppIconName;
   size?: number;
   strokeWidth?: number;
 }
 
-export function AppIcon({ color = '#382D23', name, size = 24, strokeWidth = 1.9 }: AppIconProps) {
+export function AppIcon({ color = '#382D23', filled = false, name, size = 24, strokeWidth = 1.9 }: AppIconProps) {
   const common = {
     fill: 'none',
     stroke: color,
@@ -25,6 +26,14 @@ export function AppIcon({ color = '#382D23', name, size = 24, strokeWidth = 1.9 
         <>
           <Circle cx="10.8" cy="10.8" r="6.8" {...common} />
           <Line x1="16" x2="21" y1="16" y2="21" {...common} />
+        </>
+      ) : null}
+      {name === 'arrow-left' ? <Path d="M19 12H5M11 18l-6-6 6-6" {...common} /> : null}
+      {name === 'heart' ? <Path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.9-8.4a5.5 5.5 0 0 0-.1-7.8Z" {...common} fill={filled ? color : 'none'} /> : null}
+      {name === 'share' ? (
+        <>
+          <Path d="M12 16V3M7.5 7.5 12 3l4.5 4.5" {...common} />
+          <Path d="M7 10H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-2" {...common} />
         </>
       ) : null}
       {name === 'sun' ? (
