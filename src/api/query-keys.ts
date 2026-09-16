@@ -4,6 +4,7 @@ export const queryKeys = {
   books: {
     all: ['books'] as const,
     detail: (bookId: number) => ['books', 'detail', bookId] as const,
+    infinite: (params: Omit<BookListParams, 'page'>) => ['books', 'infinite', params] as const,
     list: (params: BookListParams) => ['books', 'list', params] as const,
     new: ['books', 'new'] as const,
     popular: ['books', 'popular'] as const,
@@ -19,6 +20,11 @@ export const queryKeys = {
   recommendations: {
     all: ['recommendations'] as const,
     list: (page: number, size: number) => ['recommendations', page, size] as const,
+  },
+  reviews: {
+    all: (bookId: number) => ['reviews', bookId] as const,
+    list: (bookId: number, page: number, size: number, sort: 'NEWEST' | 'OLDEST') => ['reviews', bookId, 'list', page, size, sort] as const,
+    summary: (bookId: number) => ['reviews', bookId, 'summary'] as const,
   },
   subscription: {
     current: ['subscription', 'current'] as const,

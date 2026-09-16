@@ -23,13 +23,11 @@ export function BookCard({
   rating,
   title,
 }: BookCardProps) {
-  console.log('BOOK COVER URL:', coverUrl);
-
   return (
     <Pressable
       accessibilityHint={onPress ? `Opens ${title}` : undefined}
       accessibilityRole={onPress ? 'button' : undefined}
-      className={`w-40 ${className ?? ''}`}
+      className={`w-36 ${className ?? ''}`}
       disabled={!onPress}
       onPress={onPress}
     >
@@ -44,13 +42,6 @@ export function BookCard({
             }}
             contentFit="cover"
             transition={200}
-            onLoad={() => {
-              console.log('IMAGE LOADED:', coverUrl);
-            }}
-            onError={(event) => {
-              console.log('IMAGE ERROR:', event.error);
-              console.log('FAILED URL:', coverUrl);
-            }}
           />
         ) : (
           <View className="h-full w-full items-center justify-center px-3">
