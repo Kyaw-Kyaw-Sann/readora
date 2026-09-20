@@ -14,17 +14,19 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: async () => {
-      const refreshToken = await getStoredRefreshToken();
-
-      if (refreshToken) {
+      try {
+        const refreshToken = await getStoredRefreshToken();
+        if (refreshToken) await logout(refreshToken);
+      } catch {
+        // Server revocation is best effort; secure local cleanup must still run.
+      } finally {
+        await queryClient.cancelQueries();
         try {
-          await logout(refreshToken);
-        } catch {
-          // Local token cleanup must still happen if the session is already invalid on the server.
+          await clearSession();
+        } finally {
+          queryClient.clear();
         }
       }
-
-      await clearSession();
     },
     onSuccess: () => {
       queryClient.clear();

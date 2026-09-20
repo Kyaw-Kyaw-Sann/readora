@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { normalizeApiError } from '@/api/api-error';
 import { PremiumBadge } from '@/components/books/premium-badge';
 import { Rating } from '@/components/books/rating';
+import { ReviewCard } from '@/components/reviews/review-card';
 import { AppButton } from '@/components/ui/app-button';
 import { AppIcon } from '@/components/ui/app-icon';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/status-states';
@@ -16,7 +17,6 @@ import { useFavoriteStatus, useToggleFavorite } from '@/hooks/use-favorites';
 import { useReviews, useReviewSummary } from '@/hooks/use-reviews';
 import { useAuthStore } from '@/stores/auth-store';
 import type { Book } from '@/types/book.types';
-import type { Review } from '@/types/review.types';
 
 function formatDate(value?: string | null) {
   if (!value) return 'Not provided';
@@ -42,25 +42,6 @@ function MetadataItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ReviewPreview({ review }: { review: Review }) {
-  return (
-    <View className="mt-3 rounded-2xl border border-border bg-surface p-4 dark:border-border-dark dark:bg-surface-dark">
-      <View className="flex-row items-center justify-between">
-        <View className="mr-3 flex-1 flex-row items-center">
-          <View className="h-9 w-9 items-center justify-center rounded-full bg-primary-soft dark:bg-border-dark">
-            <Text className="font-semibold text-primary-dark">{review.user.name.trim().charAt(0).toUpperCase() || 'R'}</Text>
-          </View>
-          <View className="ml-3 flex-1">
-            <Text className="font-semibold text-text dark:text-text-dark" numberOfLines={1}>{review.user.name}</Text>
-            <Text className="mt-0.5 text-xs text-text-muted dark:text-text-muted-dark">{formatDate(review.createdAt)}</Text>
-          </View>
-        </View>
-        <Rating value={review.rating} />
-      </View>
-      {review.comment ? <Text className="mt-3 leading-5 text-text-muted dark:text-text-muted-dark">{review.comment}</Text> : null}
-    </View>
-  );
-}
 
 function AccessBadge({ book }: { book: Book }) {
   if (book.accessType === 'PREMIUM') return <PremiumBadge />;
@@ -253,7 +234,10 @@ export default function BookDetailScreen() {
         </View>
 
         <View className="mt-9">
-          <Text className="font-serif text-2xl text-text dark:text-text-dark">Reviews</Text>
+          <View className="flex-row items-center justify-between">
+            <Text className="font-serif text-2xl text-text dark:text-text-dark">Reviews</Text>
+            <AppButton label="View all / Write" variant="ghost" onPress={() => router.push(`/book/${book.id}/reviews` as Href)} />
+          </View>
           {summaryQuery.isLoading ? <LoadingState label="Loading rating summary..." /> : null}
           {summaryQuery.isError ? <ErrorState onRetry={() => void summaryQuery.refetch()} title="Rating summary could not be loaded." /> : null}
           {summaryQuery.data && summaryQuery.data.reviewCount > 0 ? (
@@ -268,8 +252,8 @@ export default function BookDetailScreen() {
 
           {reviewsQuery.isLoading ? <LoadingState label="Loading latest reviews..." /> : null}
           {reviewsQuery.isError ? <ErrorState onRetry={() => void reviewsQuery.refetch()} title="Latest reviews could not be loaded." /> : null}
-          {!reviewsQuery.isLoading && !reviewsQuery.isError && latestReviews.length ? latestReviews.map((review) => <ReviewPreview key={review.id} review={review} />) : null}
-          {!reviewsQuery.isLoading && !reviewsQuery.isError && !latestReviews.length ? <EmptyState description="Be the first to share a rating in the Reviews phase." title="No reviews yet" /> : null}
+          {!reviewsQuery.isLoading && !reviewsQuery.isError && latestReviews.length ? latestReviews.map((review) => <ReviewCard key={review.id} review={review} />) : null}
+          {!reviewsQuery.isLoading && !reviewsQuery.isError && !latestReviews.length ? <EmptyState description="Be the first to share your thoughts. Tap View all / Write." title="No reviews yet" /> : null}
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -25,7 +25,8 @@ function formatDate(value: string | null) {
   return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString();
 }
 
-function formatDuration(totalSeconds: number) {
+function formatDuration(totalSeconds: number | null) {
+  if (totalSeconds === null) return 'Unknown duration';
   const safeSeconds = Math.max(0, totalSeconds);
   const hours = Math.floor(safeSeconds / 3600);
   const minutes = Math.floor((safeSeconds % 3600) / 60);
@@ -96,7 +97,7 @@ function ProgressCard({ mode, progress }: { mode: ProgressMode; progress: Readin
   const reading = mode === 'reading';
   const destination = reading ? `/reader/${progress.book.id}` : `/player/${progress.book.id}`;
   const detail = reading
-    ? `Page ${(progress as ReadingProgress).currentPage} of ${(progress as ReadingProgress).totalPages}`
+    ? `Page ${(progress as ReadingProgress).currentPage}${(progress as ReadingProgress).totalPages ? ` of ${(progress as ReadingProgress).totalPages}` : ''}`
     : `${formatDuration((progress as ListeningProgress).currentSeconds)} of ${formatDuration((progress as ListeningProgress).durationSeconds)}`;
 
   return (
