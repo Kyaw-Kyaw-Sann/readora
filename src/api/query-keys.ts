@@ -17,6 +17,16 @@ export const queryKeys = {
     status: (bookId: number) => ['favorites', 'status', bookId] as const,
   },
   library: ['library', 'summary'] as const,
+  reading: {
+    all: ['reading-progress'] as const,
+    detail: (bookId: number) => ['reading-progress', 'detail', bookId] as const,
+  },
+  pdfAccess: (bookId: number) => ['books', 'pdf-access', bookId] as const,
+  audioAccess: (bookId: number) => ['books', 'audio-access', bookId] as const,
+  listening: {
+    all: ['listening-progress'] as const,
+    detail: (bookId: number) => ['listening-progress', 'detail', bookId] as const,
+  },
   recommendations: {
     all: ['recommendations'] as const,
     list: (page: number, size: number) => ['recommendations', page, size] as const,
@@ -25,6 +35,7 @@ export const queryKeys = {
     all: (bookId: number) => ['reviews', bookId] as const,
     list: (bookId: number, page: number, size: number, sort: 'NEWEST' | 'OLDEST') => ['reviews', bookId, 'list', page, size, sort] as const,
     summary: (bookId: number) => ['reviews', bookId, 'summary'] as const,
+    mine: (bookId: number, userId: number) => ['reviews', bookId, 'mine', userId] as const,
   },
   subscription: {
     current: ['subscription', 'current'] as const,

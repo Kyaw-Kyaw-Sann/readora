@@ -3,7 +3,7 @@ import type { Book } from '@/types/book.types';
 export interface ReadingProgress {
   book: Book;
   currentPage: number;
-  totalPages: number;
+  totalPages: number | null;
   completed: boolean;
   progressPercentage: number;
   lastAccessedAt: string | null;
@@ -13,7 +13,7 @@ export interface ReadingProgress {
 export interface ListeningProgress {
   book: Book;
   currentSeconds: number;
-  durationSeconds: number;
+  durationSeconds: number | null;
   completed: boolean;
   progressPercentage: number;
   lastAccessedAt: string | null;
