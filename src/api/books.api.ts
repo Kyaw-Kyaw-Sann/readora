@@ -12,15 +12,15 @@ export async function getBook(bookId: number) {
 }
 
 export async function getNewBooks() {
-  return getResponseData(await apiClient.get<ApiResponse<Book[]>>('/api/books/new'));
+  return getResponseData(await apiClient.get<ApiResponse<PageResponse<Book>>>('/api/books/new'));
 }
 
 export async function getPopularBooks() {
-  return getResponseData(await apiClient.get<ApiResponse<Book[]>>('/api/books/popular'));
+  return getResponseData(await apiClient.get<ApiResponse<PageResponse<Book>>>('/api/books/popular'));
 }
 
 export async function getPremiumBooks() {
-  return getResponseData(await apiClient.get<ApiResponse<Book[]>>('/api/books/premium'));
+  return getResponseData(await apiClient.get<ApiResponse<PageResponse<Book>>>('/api/books/premium'));
 }
 
 export async function getBookPdf(bookId: number) {

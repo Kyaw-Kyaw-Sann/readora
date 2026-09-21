@@ -222,9 +222,9 @@ export default function BookDetailScreen() {
             </>
           ) : (
             <>
-              {book.pdfUrl ? <AppButton label="Read" onPress={() => router.push(`/reader/${book.id}` as Href)} /> : null}
-              {book.audioUrl ? <AppButton label="Listen" onPress={() => router.push(`/player/${book.id}` as Href)} variant="outline" /> : null}
-              {!book.pdfUrl && !book.audioUrl ? (
+              {book.hasPdf ? <AppButton label="Read" onPress={() => router.push(`/reader/${book.id}` as Href)} /> : null}
+              {book.hasAudio ? <AppButton label="Listen" onPress={() => router.push(`/player/${book.id}` as Href)} variant="outline" /> : null}
+              {!book.hasPdf && !book.hasAudio ? (
                 <View className="rounded-2xl border border-border bg-surface p-4 dark:border-border-dark dark:bg-surface-dark">
                   <Text className="text-center text-text-muted dark:text-text-muted-dark">Reading and audio resources are not available for this book.</Text>
                 </View>

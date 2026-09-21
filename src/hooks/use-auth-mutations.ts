@@ -22,9 +22,9 @@ export function useLogin() {
   return useMutation({
     mutationFn: (request: LoginRequest) => login(request),
     onSuccess: async ({ accessToken, refreshToken, user }) => {
-      const route = await startAuthenticatedSession({ accessToken, refreshToken }, user);
-      queryClient.setQueryData(queryKeys.user.current, user);
-      router.replace(routeForSession(route));
+      const session = await startAuthenticatedSession({ accessToken, refreshToken }, user);
+      queryClient.setQueryData(queryKeys.user.current, session.user);
+      router.replace(routeForSession(session.route));
     },
   });
 }

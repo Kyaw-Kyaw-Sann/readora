@@ -3,6 +3,7 @@ import { create, type InternalAxiosRequestConfig } from 'axios';
 import { ApiError, normalizeApiError } from '@/api/api-error';
 import { environment, hasApiBaseUrl } from '@/constants/env';
 import { clearTokens, getAccessToken, getStoredRefreshToken, replaceAccessToken } from '@/lib/token-storage';
+import { useAuthStore } from '@/stores/auth-store';
 import type { ApiResponse } from '@/types/api.types';
 
 interface RetriableRequestConfig extends InternalAxiosRequestConfig {
@@ -59,8 +60,14 @@ apiClient.interceptors.response.use(
       originalRequest.headers.Authorization = `Bearer ${nextAccessToken}`;
       return apiClient(originalRequest);
     } catch (refreshError) {
-      await clearTokens();
-      return Promise.reject(normalizeApiError(refreshError));
+      const normalizedError = normalizeApiError(refreshError);
+
+      if (normalizedError.status === 401 || normalizedError.status === 403) {
+        await clearTokens();
+        useAuthStore.getState().setUnauthenticated();
+      }
+
+      return Promise.reject(normalizedError);
     }
   },
 );

@@ -23,7 +23,11 @@ export async function clearSession() {
 
 export async function startAuthenticatedSession(tokens: AuthTokens, user: AuthUser) {
   await saveTokens(tokens);
-  return resolveUserRoute(user);
+
+  const sessionUser = user.emailVerified ? await getCurrentUser() : user;
+  const route = await resolveUserRoute(sessionUser);
+
+  return { route, user: sessionUser };
 }
 
 async function restoreSessionState(): Promise<SessionRoute> {

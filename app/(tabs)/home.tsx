@@ -181,8 +181,8 @@ export default function HomeTab() {
       </View>
 
       <HomeBookSection books={recommendedBooks} error={recommendations.isError} loading={recommendations.isLoading} onRetry={() => void recommendations.refetch()} title="Recommended for You" />
-      <HomeBookSection books={popular.data ?? []} error={popular.isError} loading={popular.isLoading} onRetry={() => void popular.refetch()} title="Popular" />
-      <HomeBookSection books={newBooks.data ?? []} error={newBooks.isError} loading={newBooks.isLoading} onRetry={() => void newBooks.refetch()} title="New Arrivals" />
+      <HomeBookSection books={popular.data?.content ?? []} error={popular.isError} loading={popular.isLoading} onRetry={() => void popular.refetch()} title="Popular" />
+      <HomeBookSection books={newBooks.data?.content ?? []} error={newBooks.isError} loading={newBooks.isLoading} onRetry={() => void newBooks.refetch()} title="New Arrivals" />
       <HomeBookSection books={freeBooks.data?.content ?? []} error={freeBooks.isError} loading={freeBooks.isLoading} onRetry={() => void freeBooks.refetch()} title="Free Books" />
 
     </ScrollView>

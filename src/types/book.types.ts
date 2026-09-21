@@ -13,8 +13,8 @@ export interface Book {
   publicationDate?: string | null;
   author: string;
   coverUrl: string | null;
-  pdfUrl?: string | null;
-  audioUrl?: string | null;
+  hasPdf?: boolean;
+  hasAudio?: boolean;
   pageCount?: number | null;
   audioDurationSeconds?: number | null;
   accessType: BookAccessType;
